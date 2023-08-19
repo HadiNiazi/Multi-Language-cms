@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\DashboardController;
+use App\Http\Controllers\Admin\TranslationController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -17,15 +18,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.general');
+    return view('welcome');
 });
 
 Auth::routes();
 
 Route::middleware('auth')->group(function() {
 
-    Route::prefix('auth')->as('auth.')->group(function() {
+    Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+        Route::prefix('translations')->as('translations.')->group(function() {
+            Route::get('/', [TranslationController::class, 'openTranslationPage'])->name('index');
+        });
     });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

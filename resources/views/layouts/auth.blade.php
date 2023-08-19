@@ -36,21 +36,19 @@
 			<div id="sidebar" class="sidebar sidebar-with-footer">
 				<!-- Aplication Brand -->
 				<div class="app-brand">
-					<a href="/index.html"> <img src="{{ asset('assets/auth/images/logo.png') }}" alt="Mono"> <span class="brand-name">MONO</span> </a>
+					<a href="/index.html"> <img src="{{ asset('assets/auth/images/logo.png') }}" style="width: 50px; background: #9e6de0; border-radius: 50%" alt="CDL"> <span class="brand-name"><h2 class="text-white">CDL</h2></span> </a>
 				</div>
 				<!-- begin sidebar scrollbar -->
 				<div class="sidebar-left" data-simplebar style="height: 100%;">
 					<!-- sidebar menu -->
 					<ul class="nav sidebar-inner" id="sidebar-menu">
-						<li>
-							<a class="sidenav-item-link" href="index.html"> <i class="mdi mdi-briefcase-account-outline"></i> <span class="nav-text">Business Dashboard</span> </a>
+						<li class="{{ request()->is('admin/dashboard') ? 'active': '' }}">
+							<a class="sidenav-item-link" href="{{ route('admin.dashboard') }}"> <i class="mdi mdi-briefcase-account-outline"></i> <span class="nav-text">Dashboard</span> </a>
 						</li>
-						<li>
-							<a class="sidenav-item-link" href="analytics.html"> <i class="mdi mdi-chart-line"></i> <span class="nav-text">Analytics Dashboard</span> </a>
-						</li>
+
 						<li class="section-title"> Apps </li>
-						<li>
-							<a class="sidenav-item-link" href="chat.html"> <i class="mdi mdi-wechat"></i> <span class="nav-text">Chat</span> </a>
+						<li class="{{ request()->is('admin/translations') ? 'active': '' }}">
+							<a class="sidenav-item-link" href="{{ route('admin.translations.index') }}"> <i class="mdi mdi-wechat"></i> <span class="nav-text">Translations</span> </a>
 						</li>
 						<li>
 							<a class="sidenav-item-link" href="contacts.html"> <i class="mdi mdi-phone"></i> <span class="nav-text">Contacts</span> </a>
@@ -268,7 +266,7 @@
 							</ul>
 						</li>
 						<li class="section-title"> Documentation </li>
-						<li class="active">
+						<li class="{{ request()->is('admin/getting') ? 'active': '' }}">
 							<a class="sidenav-item-link" href="getting-started.html"> <i class="mdi mdi-airplane"></i> <span class="nav-text">Getting Started</span> </a>
 						</li>
 						<li class="has-sub">

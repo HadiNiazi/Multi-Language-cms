@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('translations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('fruit_id')->constrained();
             $table->foreignId('language_id')->constrained();
-            $table->string('default_text');
-            $table->string('translated_text');
+            $table->string('translated_title');
+            $table->string('translated_heading_title_1');
+            $table->string('translated_heading_title_2');
+            $table->string('translated_heading_title_3');
+            $table->tinyInteger('is_visible');
             $table->timestamps();
         });
     }
