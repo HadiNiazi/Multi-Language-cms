@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Fruit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +14,7 @@ return new class extends Migration
     {
         Schema::create('fruits', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('heading_title_1');
-            $table->string('heading_title_2');
-            $table->string('heading_title_3');
-            $table->tinyInteger('is_visible')->default(0);
-            $table->timestamps();
+            $table->bigInteger('fruit_id')->default(Fruit::FRUIT_ID_STARTING_FROM)->unique();
         });
     }
 

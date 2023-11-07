@@ -13,14 +13,62 @@ class LanguageSeeder extends Seeder
      */
     public function run(): void
     {
-        Language::create([
-            'code' => 'en',
-            'name' => 'english'
-        ]);
+        $languages = [
+            [
+                'code' => 'eng',
+                'name' => 'English',
+                'rtl'  => 0
+            ],
 
-        Language::create([
-            'code' => 'fr',
-            'name' => 'french'
-        ]);
+            [
+                'code' => 'ara',
+                'name' => 'Arabic',
+                'rtl'  => 1
+            ],
+
+            [
+                'code' => 'kur',
+                'name' => 'Kurdish-Badini',
+                'rtl'  => 0
+            ],
+
+            [
+                'code' => 'kur-2',
+                'name' => 'Kurdish-Sorani',
+                'rtl'  => 0
+            ],
+
+            [
+                'code' => 'kur-3',
+                'name' => 'Kurdish-Kurmanji',
+                'rtl'  => 0
+            ],
+
+            [
+                'code' => 'urd',
+                'name' => 'Urdu',
+                'rtl'  => 1
+            ],
+
+            [
+                'code' => 'zho',
+                'name' => 'Chinese-Mandarin',
+                'rtl'  => 0
+            ],
+
+            [
+                'code' => 'zho-2',
+                'name' => 'Chinese-Cantonese',
+                'rtl'  => 0
+            ]
+        ];
+
+        foreach ($languages as $language) {
+            Language::create([
+                'code' => $language['code'],
+                'name' => $language['name'],
+                'rtl'  => $language['rtl']
+            ]);
+        }
     }
 }

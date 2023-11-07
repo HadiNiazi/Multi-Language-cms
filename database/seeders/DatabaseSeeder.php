@@ -20,10 +20,11 @@ class DatabaseSeeder extends Seeder
         Schema::enableForeignKeyConstraints();
 
         $this->call([
-            UserSeeder::class,
             LanguageSeeder::class,
             FruitSeeder::class,
-            TranslationSeeder::class
+            TranslationSeeder::class,
+            UserSeeder::class,
+            SectionSeeder::class,
         ]);
     }
 }

@@ -17,17 +17,18 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'admin@cdlcell.com',
-            'role' => 1,
             'email_verified_at' => now(),
+            'role' => 1,
             'password' => Hash::make(12345678),
         ]);
 
         User::create([
             'name' => 'User',
             'email' => 'user@cdlcell.com',
-            'role' => 0,
             'email_verified_at' => now(),
+            'role' => 0,
             'password' => Hash::make(12345678),
         ]);
+
     }
 }

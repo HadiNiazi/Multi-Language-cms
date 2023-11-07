@@ -29,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = LoginController::AUTH_DASHBOARD_URL;
 
     /**
      * Create a new controller instance.

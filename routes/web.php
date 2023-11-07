@@ -1,8 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\ClinicianController;
 use App\Http\Controllers\Admin\TranslationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FruitController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Translator\DashboardController as TranslatorDashboardController;
+use App\Http\Controllers\Translator\SectionController;
+use App\Http\Controllers\Translator\FruitController as TranslatorFruitController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,21 +24,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::as('site.')->group(function() {
+    Route::get('/', [HomeController::class, 'openHomePage'])->name('home');
+    Route::get('/fruits/{fruit_id}', [HomeController::class, 'openFruitDetailsPage'])->name('fruits.details');
 });
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'verify' => true
+]);
 
 Route::middleware('auth')->group(function() {
 
-    Route::prefix('admin')->as('admin.')->group(function() {
+    Route::get('profile/edit', [DashboardController::class, 'editProfile'])->name('profile.edit');
+    Route::post('profile/update/{id}', [DashboardController::class, 'updateProfile'])->name('profile.update');
+
+    Route::prefix('admin')->as('admin.')->middleware(['is_admin'])->group(function() {
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-        Route::prefix('translations')->as('translations.')->group(function() {
-            Route::get('/', [TranslationController::class, 'openTranslationPage'])->name('index');
-        });
+        Route::get('languages', [UserController::class, 'loadLanguages'])->name('languages');
+        Route::resource('users', UserController::class);
+        Route::resource('fruits', FruitController::class);
+
     });
+
+
+    // Route::prefix('translator')->as('translator.')->middleware('verified')->group(function() {
+
+
+        // prefix('sections')->as('sections.')->
+        Route::middleware('verified')->group(function() {
+            Route::get('/dashboard', [TranslatorDashboardController::class, 'dashboard'])->name('dashboard');
+            Route::get('/sections', [SectionController::class, 'openSectionsPage'])->name('sections.index');
+            Route::get('/languages', [TranslatorFruitController::class, 'openLanguagesPage'])->name('languages');
+            Route::get('fruits/{language?}', [TranslatorFruitController::class, 'openFruitsPage'])->name('fruits.index');
+            Route::get('fruits/translations/{fruit}/edit', [TranslatorFruitController::class, 'editFruitTranslationPage'])->name('fruits.translations.edit');
+            Route::post('fruits/translations/store', [TranslatorFruitController::class, 'storeFruitTranslations'])->name('fruits.translations.store');
+        });
+    // });
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 

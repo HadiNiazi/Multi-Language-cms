@@ -27,9 +27,7 @@ class LoginController extends Controller
      * @var string
      */
 
-    // public const AUTH_DASHBOARD_URL = '/auth/dashboard';
-
-    public const AUTH_DASHBOARD_URL = '/home';
+    public const AUTH_DASHBOARD_URL = '/admin/dashboard';
 
     protected $redirectTo = self::AUTH_DASHBOARD_URL;
 
@@ -53,6 +51,11 @@ class LoginController extends Controller
 
         return to_route('login');
 
+    }
+
+    public function verify()
+    {
+        return view('translator.verify');
     }
 
 }
