@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Fruit;
 use App\Models\FruitTranslation;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use DataTables;
@@ -13,56 +14,54 @@ class HomeController extends Controller
 {
     public function openHomePage(Request $request)
     {
-        // $languageId = $this->fetchLanguageFromCode($language);
+        $language = $request->language ?: 'english';
+        $searched = $request->searched;
 
-        // if (! in_array($languageId, loginUserAssignedLanguageIds())) {
-        //     abort(403, 'You are not authorized to access this resource');
-        // }
+        $language = Language::where('name', $language)->first();
 
-        $fruits = Fruit::whereHas('translation', function($query) {
-            return $query->where('status', FruitTranslation::COMPLETED);
-                //    $query->orderBy('title_1', 'asc');
-        })
-        ->get();
+        if (! $language) {
+            abort(404, 'Unable to find '. $request->language. '. please choose correct language.');
+        }
 
         if ($request->ajax()) {
 
-            return Datatables::of($fruits)
+            $fruitTranslations = FruitTranslation::search($searched)
+                        ->where('status', FruitTranslation::COMPLETED)
+                        ->where('language_id', $language->id)
+                        ->orderBy('title_1', 'asc')
+                        ->when($request->language, function ($query) use ($language) {
+                            $query->where('language_id', $language->id);
+                        })
+                        ->get();
+
+            return Datatables::of($fruitTranslations)
                 ->addIndexColumn()
 
-                ->addColumn('serial_no', function($row){
-                    $count = 0;
+                ->addColumn('title_1', function($translation) use ($language) {
 
-                    if ($row) {
-                        $count++;
-                    }
+                    $title = Str::limit($translation->title_1, 20);
 
-                    return $count;
-                })
-                ->addColumn('title_1', function($row){
+                    $fruit = $translation->fruit;
+                    $fruitId = $fruit->fruit_id;
 
-                    $title = null;
-
-                    if ($translation = $row->translation) {
-                        $title = Str::limit($translation->title_1, 20);
-                    }
-
-                    $title = '<a href="'.route('site.fruits.details', ['fruit_id' => $row->fruit_id, 'name' => Str::slug($row->translation->title_1)]).'">'. $title. '</a>';
+                    $title = '<a href="'.route('site.fruits.details', ['fruit_id' => $fruitId, 'name' => Str::slug($translation->title_1), 'language' => strtolower($language->name)]).'">'. $title. '</a>';
 
                     return $title;
                 })
-                ->addColumn('title_2', function($row){
-                    if ($translation = $row->translation) {
-                        return Str::limit($translation->title_2, 20);
-                    }
+                ->addColumn('title_2', function($translation){
+                    return Str::limit($translation->title_2, 20);
                 })
-                ->addColumn('title_3', function($row){
-                    if ($translation = $row->translation) {
-                        return Str::limit($translation->title_3, 20);
-                    }
+                ->addColumn('title_3', function($translation){
+                    return Str::limit($translation->title_3, 20);
                 })
-                ->addColumn('action', function($row) {
-                    $btn = '<a href="'.route('site.fruits.details', ['fruit_id' => $row->fruit_id, 'name' => Str::slug($row->translation->title_1)]).'" data-toggle="tooltip"  data-id="'.$row->id.'" title="Show" class="btn btn-sm btn-info view translationButton"> <i class="fa-solid fa-up-right-from-square" style="font-size:14px"></i> </a>';
+                ->addColumn('action', function($translation) use ($language) {
+
+                    $fruit = $translation->fruit;
+
+                    $fruitId = $fruit ? $fruit->fruit_id: null;
+                    $fruitPrimaryId = $fruit ? $fruit->id: null;
+
+                    $btn = '<a href="'.route('site.fruits.details', ['fruit_id' => $fruitId, 'name' => Str::slug($translation->title_1), 'language' => strtolower($language->name)]).'" data-toggle="tooltip"  data-id="'.$fruitPrimaryId.'" title="Show" class="btn btn-sm btn-info view translationButton"> <i class="fa-solid fa-up-right-from-square" style="font-size:14px"></i> </a>';
 
                     return $btn;
                 })
@@ -70,7 +69,9 @@ class HomeController extends Controller
                 ->make(true);
         }
 
-        return view('site.index', compact( 'fruits'));
+        // $fruitTranslations = $fruitTranslations->get();
+
+        return view('site.index');
     }
 
     public function openFruitDetailsPage($fruitId)

@@ -52,7 +52,7 @@
             <ul>
                 @if (count(fetchAllPublishedFruits()) > 0)
                     @foreach (fetchAllPublishedFruits() as $fruit)
-                            <li><a href="#">{{ $fruit->translation ? $fruit->translation->title_1: '' }}</a></li>
+                            <li><a href="{{ route('site.fruits.details', ['fruit_id' => $fruit->fruit_id, 'name' => $fruit->translation ? Str::slug($fruit->translation->title_1): null, 'language' => request()->language ?: 'english' ]) }}">{{ $fruit->translation ? Str::limit($fruit->translation->title_1, 15): '' }}</a></li>
                     @endforeach
                 @else
                 <ul>
@@ -84,9 +84,12 @@
 
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
 
-          <li class="flex-parent">
-            <input type="text" name="search" id="search-input" class="form-control flex-child" placeholder="Search...">
-            <button class="flex-child btn" id="search-btn"><i class="fas fa-search"></i></button>
+          <li @if ( Str::beforeLast(request()->url(), '/') == config('app.url').'/fruits') style="display: none" @endif>
+            <form method="GET" action="{{ route('site.home') }}" class="flex-parent">
+                <input type="hidden" name="language" value="{{ request()->language }}">
+                <input type="text" name="searched" value="{{ request()->searched }}" id="search-input" class="form-control flex-child" placeholder="Search...">
+                <button class="flex-child btn" id="search-btn"><i class="fas fa-search"></i></button>
+            </form>
           </li>
 
           <!-- list item with multiple childs -->
@@ -108,12 +111,15 @@
             </ul>
           </li> --}}
 
-          <li>
-            <select name="languages" class="languages-dropdwon">
+          <li @if ( Str::beforeLast(request()->url(), '/') == config('app.url').'/fruits') style="display: none" @endif>
+            <select name="language" id="language" class="languages-dropdwon">
                 <option value="" disabled selected>Choose Language</option>
-                <option value="ara">Arabic</option>
-                <option value="urd">Urdu</option>
-              </select>
+                @if (count(fetchAllLanguages()) > 0)
+                    @foreach (fetchAllLanguages() as $language)
+                        <option @selected(request()->language ? request()->language == strtolower($language->name) : strtolower($language->name) == 'english')  value="{{ strtolower($language->name) }}">{{ $language->name }}</option>
+                    @endforeach
+                @endif
+            </select>
           </li>
 
           <li>
@@ -143,7 +149,7 @@
 
       <div class="me-md-auto text-center text-md-start">
         <div class="copyright">
-          &copy; Copyright <strong><span><a href="https://cdlcell.com">Career Developmen Lab</a></span></strong>. All Rights Reserved
+          &copy; Copyright <strong><span><a target="_blank" href="https://cdlcell.com">Career Developmen Lab</a></span></strong>. All Rights Reserved
         </div>
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">
@@ -166,9 +172,21 @@
   <script src="{{ asset('assets/site/plugins/toasts/main.js') }}"></script>
   @yield('scripts')
 
+  <script>
+    $(document).ready(function() {
+        $('#language').change(function() {
+            let language = this.value;
+            let searched = "{{ request()->searched }}";
+
+            window.location.href = "{{ request()->url() }}"+'?language='+language+ '&searched='+searched;
+        });
+    });
+  </script>
+
   <script src="{{ asset('assets/site/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/site/js/main.js') }}"></script>
+
 
 </body>
 

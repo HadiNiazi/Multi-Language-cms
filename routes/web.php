@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function() {
             Route::get('/dashboard', [TranslatorDashboardController::class, 'dashboard'])->name('dashboard');
             Route::get('/sections', [SectionController::class, 'openSectionsPage'])->name('sections.index');
             Route::get('/languages', [TranslatorFruitController::class, 'openLanguagesPage'])->name('languages');
-            Route::get('fruits/{language?}', [TranslatorFruitController::class, 'openFruitsPage'])->name('fruits.index');
+            Route::get('fruits/language/{language?}', [TranslatorFruitController::class, 'openFruitsPage'])->name('fruits.index');
             Route::get('fruits/translations/{fruit}/edit', [TranslatorFruitController::class, 'editFruitTranslationPage'])->name('fruits.translations.edit');
             Route::post('fruits/translations/store', [TranslatorFruitController::class, 'storeFruitTranslations'])->name('fruits.translations.store');
         });

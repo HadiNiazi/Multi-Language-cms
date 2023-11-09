@@ -15,8 +15,8 @@ class Language extends Model
 
     protected $fillable = ['code', 'name'];
 
-    public function users(): MorphToMany
+    public function users()
     {
-        return $this->morphToMany(User::class, 'language_users');
+        return $this->belongsToMany(User::class, 'fruit_language_user');
     }
 }

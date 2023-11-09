@@ -53,8 +53,8 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    @if (count($fruits) > 0)
-                    <table id="fruits-table" class="table">
+                    {{-- @if (count($fruitTranslations) > 0) --}}
+                    <table id="fruits-table" class="table" @if(request()->language == 'urdu' || request()->language == 'arabic') dir="rtl" @endif>
                       <thead>
                           <th>#</th>
                           <th>Title 1</th>
@@ -63,23 +63,12 @@
                           <th>Action</th>
                       </thead>
                       <tbody>
-                          {{-- @foreach ($fruits as $key => $fruit)
-                            <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ $fruit->translation ? $fruit->translation->title_1: '' }}</td>
-                                <td>{{ $fruit->translation ? $fruit->translation->title_2: '' }}</td>
-                                <td>{{ $fruit->translation ? $fruit->translation->title_3: '' }}</td>
-                            </tr>
-                          @endforeach --}}
                       </tbody>
                     </table>
 
-                    {{-- <button id="previous-100">Previous 100</button>
-                    <button id="next-100">Next 100</button> --}}
-
-                    @else
+                    {{-- @else
                     <p class="text-danger text-center not-found-msg">No fruit found.</p>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
     </section>
@@ -337,11 +326,14 @@
             }
         });
 
+        let language = "{{ request()->language }}";
+        let searched = "{{ request()->searched }}";
+
         var table = $("#fruits-table").DataTable({
             processing: true,
             serverSide: true,
             lengthChange: false,
-            "order": [[1, 'asc']],
+            "order": [],
             "language": {
                 "paginate": {
                     "previous": "Previous 100",
@@ -349,16 +341,17 @@
                 }
             },
             // "paging": false,
-            "pageLength": 1, // Set the initial number of items to load
+            "pageLength": 3, // Set the initial number of items to load
             // "lengthMenu": [100, 200, 500], // Customize the length menu options
-            ajax: "{{ route('site.home') }}",
+            ajax: "{{ route('site.home') }}" + '?language='+language + '&searched='+ searched,
             columns: [
-                {data: 'serial_no'},
+                {data: 'DT_RowIndex', orderable: false, searchable: false},
                 {data: 'title_1'},
                 {data: 'title_2'},
                 {data: 'title_3'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
+
         });
 
 

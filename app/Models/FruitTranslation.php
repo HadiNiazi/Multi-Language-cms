@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Laravel\Scout\Searchable;
 
 class FruitTranslation extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     public const PENDING = 0;
     public const IN_PROGRESS = 1;
@@ -25,6 +26,23 @@ class FruitTranslation extends Model
         'heading_title_3', 'description_1', 'description_2', 'description_3', 'images', 'is_visible', 'status',
         'created_by', 'updated_by'
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'title_1' => $this->title_1,
+            'heading_title_1' => $this->heading_title_1,
+            'description_1' => $this->description_1,
+
+            'title_2' => $this->title_2,
+            'heading_title_2' => $this->heading_title_2,
+            'description_2' => $this->description_2,
+
+            'title_3' => $this->title_3,
+            'heading_title_3' => $this->heading_title_3,
+            'description_3' => $this->description_3,
+        ];
+    }
 
     public function fruit()
     {

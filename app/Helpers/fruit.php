@@ -83,3 +83,10 @@ if (! file_exists('fetchAllPublishedFruits')) {
     }
 
 }
+
+if (! file_exists('fetchAllLanguages')) {
+
+    function fetchAllLanguages() {
+        return Language::with('users')->get();
+    }
+}
