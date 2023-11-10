@@ -141,7 +141,7 @@ class FruitController extends Controller
         $fruit = Fruit::where('fruit_id', $fruitRandomId)->first();
 
         if ($fruit) {
-            return back()->withErrors('Fruit Id already exists, please resubmit request again. If still problem persists please contact with administrator');
+            return back()->withErrors('Id already exists, please resubmit request again. If still problem persists please contact with administrator');
         }
 
         $fruit = Fruit::create([
@@ -163,6 +163,14 @@ class FruitController extends Controller
 
         }
 
+        $translationRandomId = rand(9, 99). rand(999, 9999);
+
+        $translation = FruitTranslation::where('translation_id', $translationRandomId)->first();
+
+        if ($translation) {
+            return back()->withErrors('Id already exists, please resubmit request again. If still problem persists, please contact with administrator');
+        }
+
         $fruit->translation()->create([
             'language_id' => $defaultLanguage ? $defaultLanguage->id: '',
             'title_1' => $request->title_1,
@@ -177,7 +185,8 @@ class FruitController extends Controller
             'status' => $request->status != null ? $request->status: 0,
             'is_visible' => $request->is_visible ? $request->is_visible: 0,
             'images' => implode("|",$imageNames),
-            'created_by' => auth()->id()
+            'created_by' => auth()->id(),
+            'translation_id' => $translationRandomId
         ]);
 
         session()->flash('alert-success', 'Fruit saved successfully');

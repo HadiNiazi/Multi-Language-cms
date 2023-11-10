@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('language_id')->constrained();
             $table->foreignId('fruit_id')->constrained();
+            $table->bigInteger('translation_id');
             $table->string('title_1');
             $table->string('title_2');
             $table->string('title_3');

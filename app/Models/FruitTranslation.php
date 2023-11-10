@@ -24,7 +24,7 @@ class FruitTranslation extends Model
     protected $fillable = [
         'fruit_id', 'language_id', 'title_1', 'title_2', 'title_3', 'heading_title_1', 'heading_title_2',
         'heading_title_3', 'description_1', 'description_2', 'description_3', 'images', 'is_visible', 'status',
-        'created_by', 'updated_by'
+        'created_by', 'updated_by', 'translation_id'
     ];
 
     public function toSearchableArray()

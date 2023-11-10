@@ -24,11 +24,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::as('site.')->group(function() {
-    Route::get('/', [HomeController::class, 'openHomePage'])->name('home');
-    Route::get('/fruits/{fruit_id}', [HomeController::class, 'openFruitDetailsPage'])->name('fruits.details');
-});
-
 Auth::routes([
     'register' => false,
     'verify' => true
@@ -65,4 +60,15 @@ Route::middleware('auth')->group(function() {
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+});
+
+Route::as('site.')->controller(HomeController::class)->group(function() {
+    Route::get('/', 'openHomePage')->name('home');
+    Route::get('/{language}/fruits/{fruit_id}', 'openFruitDetailsPage')->name('fruits.details');
+
+    Route::get('/{langauge}', 'openLanguagesPage')->name('languages');
+
+    Route::get('/{language}/{item}', 'openItemsPage')->name('language.item');
+
+    // Route::get('/frutis', 'openFruitsPage')->name('fruits.index');
 });

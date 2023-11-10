@@ -28,7 +28,7 @@
         <div class="container">
 
             <div class="section-title mb-5">
-              <h4>Please select your language to continue</h4>
+              <h4>Please select your item</h4>
             </div>
 
             <div class="row">
@@ -36,13 +36,9 @@
                     <div class="container">
                         <div class="center-links">
                             <div>
-                                @if (count($languages) > 0)
-                                    @foreach ($languages as $language)
-                                        <a href="{{ route('site.languages', $language->code) }}" class="btn m-1">{{ ucfirst($language->name) }}</a>
-                                    @endforeach
-                                @else
-                                <h4 class="text-danger text-center">No language found.</h4>
-                                @endif
+                                <a href="{{ route('site.language.item', [request()->segment(1), 'fruits']) }}" class="btn m-1">Fruits</a>
+                                <a href="#" class="btn m-1">Vegetables</a>
+                                <a href="#" class="btn m-1">Vitamins</a>
                             </div>
                         </div>
                     </div>

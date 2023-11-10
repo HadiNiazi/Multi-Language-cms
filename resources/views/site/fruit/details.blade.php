@@ -4,6 +4,7 @@
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('assets/site/css/common.css') }}">
 @endsection
 
 @section('content')
@@ -13,7 +14,7 @@
     <section id="items" class="items">
         <div class="container">
 
-            <div class="section-title">
+            <div class="section-title mb-5">
               <h2>Fruits</h2>
               <a href="{{ url()->previous() }}" class="btn" style="background-color: #1977cc; color: white">Go Back</a>
             </div>
@@ -21,7 +22,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <table id="fruits-table" class="table" @if(request()->language == 'urdu' || request()->language == 'arabic') dir="rtl" @endif>
+                    <table id="fruits-details-table" class="table" @if(request()->language == 'urd' || request()->language == 'ara') dir="rtl" @endif>
                         <thead>
                             <tr>
                                 <th>Title 1</th>

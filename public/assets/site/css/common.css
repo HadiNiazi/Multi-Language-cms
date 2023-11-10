@@ -27,7 +27,7 @@
     background-color: #1977cc;
     color: white !important;
     padding: 8px 10px 10px 10px !important;
-  }
+}
 .login-btn:hover {
     color: #1977cc !important;
 }
@@ -51,6 +51,48 @@
     max-height: 300px; /* Automatically adjust the height while maintaining aspect ratio */
     padding: 5px;
 }
+.table-text-left {
+    text-align: left;
+}
+#fruits-table, #fruits-table th, #fruits-table td {
+    border: none !important;
+}
+#fruits-table {
+    font-family: Arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#fruits-table th, #fruits-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+#fruits-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
 #fruits-table th {
+    background-color: #1977cc;
+    color: white;
+}
+.dataTables_wrapper .dataTables_filter input:focus  {
+    outline: none; /* Remove the outline (typically a blue border) on focus */
+}
+.dataTables_info {
+    display: none;
+}
+#fruits-details-table th {
     width: 15%;
 }
+/* .table-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+} */
+
+/* .table-container table {
+    border-collapse: collapse;
+    width: 100%;
+} */

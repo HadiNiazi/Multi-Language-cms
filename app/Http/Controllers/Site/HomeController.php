@@ -12,12 +12,25 @@ use DataTables;
 
 class HomeController extends Controller
 {
-    public function openHomePage(Request $request)
+    public function openHomePage()
     {
-        $language = $request->language ?: 'english';
+        $languages = Language::with(['users'])->get();
+
+        return view('site.index', compact('languages'));
+    }
+
+    public function openLanguagesPage()
+    {
+        return view('site.languages');
+    }
+
+    public function openItemsPage($language, $item)
+    {
+        $request = request();
+        $language = $request->segment(1) ?: 'english';
         $searched = $request->searched;
 
-        $language = Language::where('name', $language)->first();
+        $language = Language::where('code', $language)->first();
 
         if (! $language) {
             abort(404, 'Unable to find '. $request->language. '. please choose correct language.');
@@ -27,7 +40,6 @@ class HomeController extends Controller
 
             $fruitTranslations = FruitTranslation::search($searched)
                         ->where('status', FruitTranslation::COMPLETED)
-                        ->where('language_id', $language->id)
                         ->orderBy('title_1', 'asc')
                         ->when($request->language, function ($query) use ($language) {
                             $query->where('language_id', $language->id);
@@ -39,31 +51,13 @@ class HomeController extends Controller
 
                 ->addColumn('title_1', function($translation) use ($language) {
 
-                    $title = Str::limit($translation->title_1, 20);
+                    $title = Str::limit($translation->title_1, 120);
 
-                    $fruit = $translation->fruit;
-                    $fruitId = $fruit->fruit_id;
+                    $translationId = $translation->translation_id;
 
-                    $title = '<a href="'.route('site.fruits.details', ['fruit_id' => $fruitId, 'name' => Str::slug($translation->title_1), 'language' => strtolower($language->name)]).'">'. $title. '</a>';
+                    $title = '<div style="text-align:left"><a href="'.route('site.fruits.details', ['language' => strtolower($language->code), 'fruit_id' => $translationId]).'">'. $title. '</a></div>';
 
                     return $title;
-                })
-                ->addColumn('title_2', function($translation){
-                    return Str::limit($translation->title_2, 20);
-                })
-                ->addColumn('title_3', function($translation){
-                    return Str::limit($translation->title_3, 20);
-                })
-                ->addColumn('action', function($translation) use ($language) {
-
-                    $fruit = $translation->fruit;
-
-                    $fruitId = $fruit ? $fruit->fruit_id: null;
-                    $fruitPrimaryId = $fruit ? $fruit->id: null;
-
-                    $btn = '<a href="'.route('site.fruits.details', ['fruit_id' => $fruitId, 'name' => Str::slug($translation->title_1), 'language' => strtolower($language->name)]).'" data-toggle="tooltip"  data-id="'.$fruitPrimaryId.'" title="Show" class="btn btn-sm btn-info view translationButton"> <i class="fa-solid fa-up-right-from-square" style="font-size:14px"></i> </a>';
-
-                    return $btn;
                 })
                 ->rawColumns(['action', 'status', 'visible', 'title_1'])
                 ->make(true);
@@ -71,19 +65,19 @@ class HomeController extends Controller
 
         // $fruitTranslations = $fruitTranslations->get();
 
-        return view('site.index');
+        return view('site.fruit.items');
     }
 
-    public function openFruitDetailsPage($fruitId)
+    public function openFruitDetailsPage($languageId, $translationId)
     {
-        $fruit = Fruit::where('fruit_id', $fruitId)->first();
+        $translation = FruitTranslation::where('translation_id', $translationId)->first();
 
-        if (! $fruit) {
+        if (! $translation) {
             session()->flash('alert-danger', 'Unable to find the record, please refresh the webpage and try again. If still problem persists contact with administrator.');
             return back();
         }
 
-        $translation = $fruit->translation;
+        $translation = $translation;
 
         return view('site.fruit.details', compact('translation'));
     }

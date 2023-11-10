@@ -84,7 +84,7 @@
 
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
 
-          <li @if ( Str::beforeLast(request()->url(), '/') == config('app.url').'/fruits') style="display: none" @endif>
+          <li @if ( Str::beforeLast(request()->url(), '/') == config('app.url').'/'.request()->segment(1).'/fruits') style="display: none" @endif>
             <form method="GET" action="{{ route('site.home') }}" class="flex-parent">
                 <input type="hidden" name="language" value="{{ request()->language }}">
                 <input type="text" name="searched" value="{{ request()->searched }}" id="search-input" class="form-control flex-child" placeholder="Search...">
@@ -111,12 +111,12 @@
             </ul>
           </li> --}}
 
-          <li @if ( Str::beforeLast(request()->url(), '/') == config('app.url').'/fruits') style="display: none" @endif>
+          <li @if (Str::beforeLast(request()->url(), '/') == config('app.url').'/'.request()->segment(1).'/fruits') style="display: none" @endif>
             <select name="language" id="language" class="languages-dropdwon">
                 <option value="" disabled selected>Choose Language</option>
                 @if (count(fetchAllLanguages()) > 0)
                     @foreach (fetchAllLanguages() as $language)
-                        <option @selected(request()->language ? request()->language == strtolower($language->name) : strtolower($language->name) == 'english')  value="{{ strtolower($language->name) }}">{{ $language->name }}</option>
+                        <option @selected(request()->language ? request()->language == strtolower($language->code) : strtolower($language->code) == 'eng')  value="{{ strtolower($language->code) }}">{{ $language->name }}</option>
                     @endforeach
                 @endif
             </select>
@@ -174,12 +174,34 @@
 
   <script>
     $(document).ready(function() {
-        $('#language').change(function() {
-            let language = this.value;
-            let searched = "{{ request()->searched }}";
+        // $('#language').change(function() {
+        //     let language = this.value;
+        //     let searched = "{{ request()->searched }}";
 
-            window.location.href = "{{ request()->url() }}"+'?language='+language+ '&searched='+searched;
-        });
+        //     window.location.href = "{{ request()->url() }}"+'?language='+language+ '&searched='+searched;
+        // });
+
+        document.getElementById('language').addEventListener('change', function() {
+          var selectedLanguage = this.value;
+          var currentUrl = window.location.href;
+          var urlParts = currentUrl.split('/');
+
+          // Find the section part in the URL
+          var sectionIndex = urlParts.indexOf("fruits") !== -1 ? urlParts.indexOf("fruits") :
+                            urlParts.indexOf("vegetables") !== -1 ? urlParts.indexOf("vegetables") :
+                            urlParts.indexOf("vitamins") !== -1 ? urlParts.indexOf("vitamins") :
+                            -1;
+
+          if (sectionIndex !== -1) {
+              // Update the language part in the URL
+              urlParts[3] = selectedLanguage; // Assuming the language part is at index 3
+
+              // Reconstruct the URL with the updated language
+              var newUrl = urlParts.join('/');
+              window.location.href = newUrl;
+          }
+      });
+
     });
   </script>
 
