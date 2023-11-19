@@ -55,7 +55,9 @@ class HomeController extends Controller
 
                     $translationId = $translation->translation_id;
 
-                    $title = '<div style="text-align:left"><a href="'.route('site.fruits.details', ['language' => strtolower($language->code), 'fruit_id' => $translationId]).'">'. $title. '</a></div>';
+                    $fruitId = $translation->fruit ? $translation->fruit->fruit_id: null;
+
+                    $title = '<div style="text-align:left"><a href="'.route('site.fruits.details', ['language' => strtolower($language->code), 'fruit_id' => $fruitId]).'">'. $title. '</a></div>';
 
                     return $title;
                 })
@@ -68,16 +70,25 @@ class HomeController extends Controller
         return view('site.fruit.items');
     }
 
-    public function openFruitDetailsPage($languageId, $translationId)
+    public function openFruitDetailsPage($languageCode, $translationId)
     {
-        $translation = FruitTranslation::where('translation_id', $translationId)->first();
+        $fruit = Fruit::where('fruit_id', $translationId)->first();
 
-        if (! $translation) {
+        // $translation = FruitTranslation::where('translation_id', $translationId)->first();
+
+        if (! $fruit->translation) {
             session()->flash('alert-danger', 'Unable to find the record, please refresh the webpage and try again. If still problem persists contact with administrator.');
             return back();
         }
 
-        $translation = $translation;
+        $language = findLanguageFromCode($languageCode);
+
+        if (! $language) {
+            session()->flash('alert-danger', 'Unable to find the language, please refresh the webpage and try again. If still problem persists contact with administrator.');
+            return back();
+        }
+
+        $translation = $fruit->translation()->where('language_id', $language->id)->first();
 
         return view('site.fruit.details', compact('translation'));
     }

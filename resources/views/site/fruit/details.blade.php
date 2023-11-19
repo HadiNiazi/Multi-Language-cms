@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="{{ asset('assets/site/css/common.css') }}">
 @endsection
 
+@section('header')
+    @include('site.includes.header')
+@endsection
+
 @section('content')
 <main id="main">
 
@@ -15,81 +19,88 @@
         <div class="container">
 
             <div class="section-title mb-5">
-              <h2>Fruits</h2>
-              <a href="{{ url()->previous() }}" class="btn" style="background-color: #1977cc; color: white">Go Back</a>
+              <h2>{{ __('message.fruits') }}</h2>
+
+              <a href="{{ route('site.language.item', [request()->segment(1), request()->segment(2)]) }}" class="btn" style="background-color: #1977cc; color: white">{{ __('message.go_back') }}</a>
             </div>
 
 
             <div class="row">
                 <div class="col-lg-12">
-                    <table id="fruits-details-table" class="table" @if(request()->language == 'urd' || request()->language == 'ara') dir="rtl" @endif>
-                        <thead>
-                            <tr>
-                                <th>Title 1</th>
-                                <td>{{ $translation ? $translation->title_1: '' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Heading title 1</th>
-                                <td>{{ $translation ? $translation->heading_title_1: '' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Description 1</th>
-                                <td>{!! $translation ? $translation->description_1: '' !!}</td>
-                            </tr>
+                    @if ($translation)
+                        <table id="fruits-details-table" class="table" @if(request()->language == 'urd' || request()->language == 'ara') dir="rtl" @endif>
+                            <thead>
+                                <tr>
+                                    <th>{{ __('message.title_1') }}</th>
+                                    <td>{{ $translation ? $translation->title_1: '' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('message.heading_title_1') }}</th>
+                                    <td>{{ $translation ? $translation->heading_title_1: '' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('message.description_1') }}</th>
+                                    <td>{!! $translation ? $translation->description_1: '' !!}</td>
+                                </tr>
 
-                            <tr style="height: 50px;">
-                                <td></td>
-                                <td></td>
-                            </tr>
+                                <tr style="height: 50px;">
+                                    <td></td>
+                                    <td></td>
+                                </tr>
 
-                            <tr>
-                                <th>Title 2</th>
-                                <td>{{ $translation ? $translation->title_2: '' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Heading title 2</th>
-                                <td>{{ $translation ? $translation->heading_title_2: '' }}</td>
-                            </tr>
+                                <tr>
+                                    <th>{{ __('message.title_2') }}</th>
+                                    <td>{{ $translation ? $translation->title_2: '' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('message.heading_title_2') }}</th>
+                                    <td>{{ $translation ? $translation->heading_title_2: '' }}</td>
+                                </tr>
 
-                            <tr>
-                                <th>Description 2</th>
-                                <td>{!! $translation ? $translation->description_2: '' !!}</td>
-                            </tr>
+                                <tr>
+                                    <th>{{ __('message.description_2') }}</th>
+                                    <td>{!! $translation ? $translation->description_2: '' !!}</td>
+                                </tr>
 
-                            <tr style="height: 50px;">
-                                <td></td>
-                                <td></td>
-                            </tr>
+                                <tr style="height: 50px;">
+                                    <td></td>
+                                    <td></td>
+                                </tr>
 
-                            <tr>
-                                <th>Title 3</th>
-                                <td>{{ $translation ? $translation->title_3: '' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Heading title 3</th>
-                                <td>{{ $translation ? $translation->heading_title_3: '' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Description 3</th>
-                                <td>{!! $translation ? $translation->description_3: '' !!}</td>
-                            </tr>
-                        </thead>
+                                <tr>
+                                    <th>{{ __('message.title_3') }}</th>
+                                    <td>{{ $translation ? $translation->title_3: '' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('message.heading_title_3') }}</th>
+                                    <td>{{ $translation ? $translation->heading_title_3: '' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('message.description_3') }}</th>
+                                    <td>{!! $translation ? $translation->description_3: '' !!}</td>
+                                </tr>
+                            </thead>
 
-                      </table>
+                        </table>
 
-                      <div class="mt-5 mb-3 " @if(request()->language == 'urdu' || request()->language == 'arabic') dir="rtl" @endif>
-                            @if($translation->images != null)
+                        <div class="mt-5 mb-3 " @if(request()->language == 'urdu' || request()->language == 'arabic') dir="rtl" @endif>
+                                @if ($translation)
+                                    @if($translation->images != null)
 
-                                <h5 class="text-black"><b>Images</b></h5>
+                                        <h5 class="text-black"><b>Images</b></h5>
 
-                                @foreach (explode('|', $translation->images) as $image)
-                                    @if ($image != null)
-                                        <img src="{{ asset('storage/fruits/images/'. $image) }}" class="img-fluid image-size" alt="fruit image">
+                                        @foreach (explode('|', $translation->images) as $image)
+                                            @if ($image != null)
+                                                <img src="{{ asset('storage/fruits/images/'. $image) }}" class="img-fluid image-size" alt="fruit image">
+                                            @endif
+                                        @endforeach
+
                                     @endif
-                                @endforeach
-
-                            @endif
-                      </div>
+                                @endif
+                        </div>
+                    @else
+                    <h4 class="text-danger text-center text-bold">No fruit found.</h4>
+                    @endif
                 </div>
             </div>
     </section>

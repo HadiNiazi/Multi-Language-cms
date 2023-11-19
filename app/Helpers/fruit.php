@@ -73,13 +73,19 @@ if (! file_exists('loginUserAssignedLanguageIds')) {
 
 if (! file_exists('fetchAllPublishedFruits')) {
 
-    function fetchAllPublishedFruits() {
-        $navbarFruits = Fruit::with(['translation', 'translations', 'translation'])->whereHas('translation', function($query) {
-            return $query->where('status', FruitTranslation::COMPLETED)
-                   ->where('is_visible', FruitTranslation::YES);
-        })->orderBy('id', 'asc')->get();
+    function fetchAllPublishedFruits($languageCode) {
 
-        return $navbarFruits;
+        $language = Language::where('code', $languageCode)->first();
+
+        $fruitTranslations = FruitTranslation::
+                        where('status', FruitTranslation::COMPLETED)
+                        ->orderBy('title_1', 'asc')
+                        ->when($language, function ($query) use ($language) {
+                            $query->where('language_id', $language->id);
+                        })
+                        ->get();
+
+        return $fruitTranslations;
     }
 
 }
@@ -89,4 +95,13 @@ if (! file_exists('fetchAllLanguages')) {
     function fetchAllLanguages() {
         return Language::with('users')->get();
     }
+}
+
+
+if (! file_exists('findLanguageFromCode')) {
+
+    function findLanguageFromCode($code) {
+        return Language::where('code', $code)->first();
+    }
+
 }

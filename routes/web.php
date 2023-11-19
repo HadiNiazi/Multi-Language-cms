@@ -68,7 +68,7 @@ Route::as('site.')->controller(HomeController::class)->group(function() {
 
     Route::get('/{langauge}', 'openLanguagesPage')->name('languages');
 
-    Route::get('/{language}/{item}', 'openItemsPage')->name('language.item');
+    Route::get('/{language}/{item?}', 'openItemsPage')->name('language.item');
 
     // Route::get('/frutis', 'openFruitsPage')->name('fruits.index');
 });

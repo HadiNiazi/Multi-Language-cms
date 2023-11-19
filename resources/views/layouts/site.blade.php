@@ -39,102 +39,8 @@
 
 
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center">
-
-      <h1 class="logo me-auto"><a href="{{ route('site.home') }}">CMS</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="{{ route('site.home') }}" class="logo me-auto"><img src="{{ asset('assets/site/img/logo.png') }}" alt="" class="img-fluid"></a>-->
-
-      <nav id="navbar" class="navbar order-last order-lg-0">
-        <ul>
-          <li class="dropdown"><a href="#"><span>Fruits</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                @if (count(fetchAllPublishedFruits()) > 0)
-                    @foreach (fetchAllPublishedFruits() as $fruit)
-                            <li><a href="{{ route('site.fruits.details', ['fruit_id' => $fruit->fruit_id, 'name' => $fruit->translation ? Str::slug($fruit->translation->title_1): null, 'language' => request()->language ?: 'english' ]) }}">{{ $fruit->translation ? Str::limit($fruit->translation->title_1, 15): '' }}</a></li>
-                    @endforeach
-                @else
-                <ul>
-                    <li>
-                        <a href="#">No fruit found.</a>
-                    </li>
-                </ul>
-                @endif
-
-                <li><a href="#">More...</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#"><span>Vegetables</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                <li><a href="#">Vegetable 1</a></li>
-                <li><a href="#">Vegetable 2</a></li>
-                <li><a href="#">Vegetable 3</a></li>
-                <li><a href="#">More...</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#"><span>Vitamins</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                <li><a href="#">Vitamin 1</a></li>
-                <li><a href="#">Vitamin 2</a></li>
-                <li><a href="#">Vitamin 3</a></li>
-                <li><a href="#">More...</a></li>
-            </ul>
-          </li>
-
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-
-          <li @if ( Str::beforeLast(request()->url(), '/') == config('app.url').'/'.request()->segment(1).'/fruits') style="display: none" @endif>
-            <form method="GET" action="{{ route('site.home') }}" class="flex-parent">
-                <input type="hidden" name="language" value="{{ request()->language }}">
-                <input type="text" name="searched" value="{{ request()->searched }}" id="search-input" class="form-control flex-child" placeholder="Search...">
-                <button class="flex-child btn" id="search-btn"><i class="fas fa-search"></i></button>
-            </form>
-          </li>
-
-          <!-- list item with multiple childs -->
-          {{-- <li class="dropdown"><a href="#"><span>Fruits</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-                <li><a href="#">Drop Down 1</a></li>
-                <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                    <li><a href="#">Deep Drop Down 1</a></li>
-                    <li><a href="#">Deep Drop Down 2</a></li>
-                    <li><a href="#">Deep Drop Down 3</a></li>
-                    <li><a href="#">Deep Drop Down 4</a></li>
-                    <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-                </li>
-                <li><a href="#">Drop Down 2</a></li>
-                <li><a href="#">Drop Down 3</a></li>
-                <li><a href="#">Drop Down 4</a></li>
-            </ul>
-          </li> --}}
-
-          <li @if (Str::beforeLast(request()->url(), '/') == config('app.url').'/'.request()->segment(1).'/fruits') style="display: none" @endif>
-            <select name="language" id="language" class="languages-dropdwon">
-                <option value="" disabled selected>Choose Language</option>
-                @if (count(fetchAllLanguages()) > 0)
-                    @foreach (fetchAllLanguages() as $language)
-                        <option @selected(request()->language ? request()->language == strtolower($language->code) : strtolower($language->code) == 'eng')  value="{{ strtolower($language->code) }}">{{ $language->name }}</option>
-                    @endforeach
-                @endif
-            </select>
-          </li>
-
-          <li>
-            <a href="{{ route('login') }}" class="btn login-btn">Login</a>
-          </li>
-
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-
-      {{-- <a href="#appointment" class="appointment-btn scrollto"><span class="d-none d-md-inline">Make an</span> Appointment</a> --}}
-
-    </div>
-  </header><!-- End Header -->
+  @yield('header')
+  <!-- End Header -->
   <div style="margin-bottom: 150px;"></div>
 
   <!-- Start #main -->
@@ -174,14 +80,8 @@
 
   <script>
     $(document).ready(function() {
-        // $('#language').change(function() {
-        //     let language = this.value;
-        //     let searched = "{{ request()->searched }}";
 
-        //     window.location.href = "{{ request()->url() }}"+'?language='+language+ '&searched='+searched;
-        // });
-
-        document.getElementById('language').addEventListener('change', function() {
+        $('.language').on('change', function() {
           var selectedLanguage = this.value;
           var currentUrl = window.location.href;
           var urlParts = currentUrl.split('/');
@@ -192,6 +92,8 @@
                             urlParts.indexOf("vitamins") !== -1 ? urlParts.indexOf("vitamins") :
                             -1;
 
+
+
           if (sectionIndex !== -1) {
               // Update the language part in the URL
               urlParts[3] = selectedLanguage; // Assuming the language part is at index 3
@@ -200,6 +102,14 @@
               var newUrl = urlParts.join('/');
               window.location.href = newUrl;
           }
+          else {
+            urlParts[3] = selectedLanguage; // Assuming the language part is at index 3
+              // Reconstruct the URL with the updated language
+              var newUrl = urlParts.join('/');
+              window.location.href = newUrl;
+          }
+
+
       });
 
     });

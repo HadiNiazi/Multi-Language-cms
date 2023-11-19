@@ -2,12 +2,15 @@
 
 @section('title', 'Homepage')
 
+@section('header')
+@include('site.includes.landing_page_header')
+@endsection
+
 @section('css')
 <style>
     .center-links {
         display: flex;
         justify-content: center;
-        height: 100vh;
     }
     .center-links div a {
         background-color: #1977cc;

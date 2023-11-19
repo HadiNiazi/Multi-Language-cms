@@ -6,6 +6,11 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 @endsection
 
+@section('header')
+    @include('site.includes.header')
+@endsection
+
+
 @section('content')
 <main id="main">
 
@@ -14,7 +19,7 @@
         <div class="container">
 
             <div class="section-title">
-              <h2>Fruits</h2>
+              <h2>{{ __('message.fruits') }}</h2>
             </div>
 
             <div class="row">
@@ -24,7 +29,7 @@
                         <table id="fruits-table" class="table" @if(request()->language == 'urdu' || request()->language == 'arabic') dir="rtl" @endif>
                         <thead>
                             {{-- <th style="width: 5%">#</th> --}}
-                            <th style="text-align: left">Name / Title 1</th>
+                            <th style="text-align: left">{{ __('message.title_1_or_name') }}</th>
                         </thead>
                         <tbody>
                         </tbody>
@@ -39,7 +44,7 @@
     <!-- ======= End items Section ======= -->
 
     <!-- ======= Doctors Section ======= -->
-    <section id="doctors" class="doctors">
+    {{-- <section id="doctors" class="doctors">
       <div class="container">
 
         <div class="section-title">
@@ -120,10 +125,11 @@
         </div>
 
       </div>
-    </section><!-- End Doctors Section -->
+    </section> --}}
+    <!-- End Doctors Section -->
 
     <!-- ======= Frequently Asked Questions Section ======= -->
-    <section id="faq" class="faq section-bg">
+    {{-- <section id="faq" class="faq section-bg">
       <div class="container">
 
         <div class="section-title">
@@ -182,10 +188,11 @@
         </div>
 
       </div>
-    </section><!-- End Frequently Asked Questions Section -->
+    </section> --}}
+    <!-- End Frequently Asked Questions Section -->
 
     <!-- ======= Testimonials Section ======= -->
-    <section id="testimonials" class="testimonials">
+    {{-- <section id="testimonials" class="testimonials">
       <div class="container">
 
         <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
@@ -271,7 +278,8 @@
         </div>
 
       </div>
-    </section><!-- End Testimonials Section -->
+    </section> --}}
+    <!-- End Testimonials Section -->
 
 
 </main>
@@ -290,6 +298,11 @@
             }
         });
 
+        let previous_page_label = "{{ __('message.previous_100_label') }}";
+        let next_page_label = "{{ __('message.next_100_label') }}";
+        let datatable_search_label = "{{ __('message.datatable_search_label') }}";
+        let datatable_no_record_label = "{{ __('message.datatable_no_record_label') }}";
+
         let language = "{{ request()->segment(1) }}";
         let item = "{{ request()->segment(2) }}";
         let searched = "{{ request()->searched }}";
@@ -303,9 +316,11 @@
             lengthChange: false,
             "order": [],
             "language": {
+                "search": datatable_search_label,
+                'zeroRecords': datatable_no_record_label,
                 "paginate": {
-                    "previous": "Previous 100",
-                    "next": "Next 100"
+                    "previous": previous_page_label,
+                    "next": next_page_label
                 }
             },
             // "paging": false,
